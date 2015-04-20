@@ -62,7 +62,8 @@ int main(int argc, char *argv[])
     test("ab((cd)|e)*fg", "abcdcdcdfg");
     test("ab((cd)|e)*fg", "abcdcdefg");
     test("ab((cd)|e)*fg", "abcdcdcefg");
-    
+
+    test("ab?((cd)|e)?fg*", "abfgggg");
     
     return 0;
 }
