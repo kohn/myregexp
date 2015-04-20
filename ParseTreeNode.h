@@ -8,6 +8,7 @@ class Automata;
 // base class
 class ParseTreeNode
 {
+ 
 public:
     ParseTreeNode();
     virtual Automata* gen_automata()=0;

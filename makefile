@@ -1,5 +1,5 @@
-main: main.o Parser.o ParseTreeNode.o Automata.o State.o
-	g++ main.o parser.o ParseTreeNode.o Automata.o State.o -o main -g
+main: main.o Parser.o ParseTreeNode.o Automata.o State.o regexp.o
+	g++ main.o parser.o ParseTreeNode.o Automata.o State.o regexp.o -o main -g
 
 main.o: main.cpp
 	g++ -c main.cpp -g
@@ -15,6 +15,9 @@ Automata.o: Automata.cpp Automata.h
 
 State.o: State.cpp State.h
 	g++ -c State.cpp -g
+
+regexp.o: regexp.cpp regexp.h
+	g++ -c regexp.cpp -g
 
 clean:
 	rm *.o
