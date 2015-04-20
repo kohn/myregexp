@@ -5,12 +5,13 @@
 
 regexp::regexp(std::string pattern){
     Parser p;
-    automata = p.parse(pattern)->gen_automata();
+    root = p.parse(pattern);
+    automata = root->gen_automata();
     //automata->print();
 }
 
 regexp::~regexp(){
-    
+    delete root;
 }
 
 

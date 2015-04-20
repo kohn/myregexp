@@ -1,19 +1,23 @@
 #include "ParseTreeNode.h"
 #include <iostream>
 ParseTreeNode::ParseTreeNode(){
+    self = NULL;
 }
+
 ParseTreeNode::~ParseTreeNode(){
+    if(self != NULL)
+        delete self;
 }
 
 StarNode::StarNode(ParseTreeNode* node){
     child = node;
-    self = NULL;
 }
 StarNode::~StarNode(){
+    if(child != NULL)
+        delete child;
 }
 
 DotNode::DotNode(){
-    self = NULL;
 }
 
 DotNode::~DotNode(){
@@ -22,7 +26,6 @@ DotNode::~DotNode(){
 
 CharNode::CharNode(char c){
     ch=c;
-    self = NULL;
 }
 
 CharNode::~CharNode(){
@@ -31,23 +34,24 @@ CharNode::~CharNode(){
 UnionNode::UnionNode(ParseTreeNode* l, ParseTreeNode* r){
     left = l;
     right = r;
-    self = NULL;
 }
 
 UnionNode::~UnionNode(){
-    
+    if(left != NULL)
+        delete left;
+    if(right != NULL)
+        delete right;
 }
 ExistNode::ExistNode(ParseTreeNode* node){
     child = node;
-
-    self = NULL;
 }
 
 ExistNode::~ExistNode(){
+    if(child != NULL)
+        delete child;
     
 }
 ConcatNode::ConcatNode(){
-    self = NULL;
 }
 
 ConcatNode::~ConcatNode(){

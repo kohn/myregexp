@@ -8,7 +8,9 @@ class Automata;
 // base class
 class ParseTreeNode
 {
- 
+protected:
+    Automata* self;
+   
 public:
     ParseTreeNode();
     virtual Automata* gen_automata()=0;
@@ -21,7 +23,6 @@ class StarNode:public ParseTreeNode
 {
 private:
     ParseTreeNode* child;
-    Automata* self;
 
 public:
     StarNode(ParseTreeNode* node);
@@ -34,7 +35,6 @@ public:
 class DotNode:public ParseTreeNode
 {
 private:
-    Automata* self;
 
 public:
     DotNode();
@@ -47,7 +47,6 @@ class CharNode:public ParseTreeNode
 {
 private:
     char ch;
-    Automata* self;
 
 public:
     CharNode(char ch);
@@ -62,7 +61,6 @@ class UnionNode:public ParseTreeNode
 private:
     ParseTreeNode* left;
     ParseTreeNode* right;
-    Automata* self;
 public:
     UnionNode(ParseTreeNode* l, ParseTreeNode* r);
     Automata* gen_automata();
@@ -74,7 +72,6 @@ class ExistNode:public ParseTreeNode
 {
 private:
     ParseTreeNode* child;
-    Automata* self;
 public:
     ExistNode(ParseTreeNode* node);
     Automata* gen_automata();
@@ -87,7 +84,6 @@ class ConcatNode:public ParseTreeNode
 {
 private:
     std::vector<ParseTreeNode*> v;
-    Automata* self;
 public:
     ConcatNode();
     Automata* gen_automata();

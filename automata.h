@@ -6,15 +6,18 @@
 class Automata
 {
 private:
+    // each automata has at least a start state and an end state
     State* start_state;
     State* end_state;
      
 public:
     Automata();
+    // concat two automata by linking end state of the first and start
+    // state of the second
     void concat(Automata* next);
-    void add_state(State* last, char ch, State* next);
     State* s_state(){return start_state;}
     State* e_state(){return end_state;}
+    // used to debug
     void print();
     int accept(std::string s);
     virtual ~Automata();

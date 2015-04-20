@@ -19,11 +19,6 @@ void Automata::concat(Automata* next){
     end_state = next->end_state;
 }
 
-
-void Automata::add_state(State* last, char ch, State* next){
-    last->add_edge(ch, next);
-}
-
 void Automata::print(){
     start_state->print(0);
 }
