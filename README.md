@@ -2,7 +2,7 @@
 
 A simple regular expression engine based on NFA. 
 
-'|', '.', '*', '?' are supported.
+'+', '|', '.', '*', '?' are supported.
 
 # Test Cases
 
