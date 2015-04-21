@@ -85,6 +85,12 @@ int Parser::next_node(std::string s, int start_index, ParseTreeNode* &node){
             node_flag++;
             break;
         }
+        case '+':{
+            ParseTreeNode* new_node = new StarNode(local_node_stack.top());
+            local_node_stack.push(new_node);
+            node_flag ++;
+            break;
+        }
         default:{
             if(node_flag !=0 && left_brace_flag == 0){
                 node = local_node_stack.top();

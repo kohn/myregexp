@@ -21,22 +21,22 @@ main_test: main.o Parser.o ParseTreeNode.o Automata.o State.o regexp.o test.o gt
 main.o: main.cpp
 	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c main.cpp
 
-Parser.o: Parser.cpp Parser.h
+Parser.o: Parser.cpp Parser.h ParseTreeNode.h Automata.h State.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c Parser.cpp
 
-ParseTreeNode.o: ParseTreeNode.cpp ParseTreeNode.h
+ParseTreeNode.o: ParseTreeNode.cpp ParseTreeNode.h Automata.h State.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c ParseTreeNode.cpp
 
-Automata.o: Automata.cpp Automata.h
+Automata.o: Automata.cpp Automata.h ParseTreeNode.h State.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c Automata.cpp
 
 State.o: State.cpp State.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c State.cpp
 
-regexp.o: regexp.cpp regexp.h
+regexp.o: regexp.cpp regexp.h Automata.h ParseTreeNode.h State.h Parser.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c regexp.cpp
 
-test.o: test.cpp
+test.o: test.cpp Automata.h State.h regexp.h
 	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c test.cpp
 
 gtest-all.o : $(GTEST_SRCS_)
