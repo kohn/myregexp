@@ -8,7 +8,6 @@
 
 ParseTreeNode* Parser::parse(std::string s){
     int len = s.length();
-    ParseTreeNode* root = NULL;
     std::stack<ParseTreeNode*> node_stack;
 
     int i = 0;

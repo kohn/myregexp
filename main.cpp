@@ -2,15 +2,9 @@
 #include <string>
 #include "Parser.h"
 #include "regexp.h"
-using namespace std;
+#include "gtest/gtest.h"
 
-void test(string pattern, string case_str){
-    regexp reg(pattern);
-    if(reg.accept(case_str))
-        cout << "Accept" << endl;
-    else
-        cout << "Reject" << endl;
-}
+using namespace std;
 
 int main(int argc, char *argv[])
 {
@@ -41,29 +35,6 @@ int main(int argc, char *argv[])
     root_automata = root->gen_automata();
     root_automata->print();
 
-
-    test("abc", "abc");
-    test("a(b|c)", "ab");
-    test("ab*", "abbbb");
-    test("a?b*", "");
-    test("a?b*", "a");
-    test("a?b*", "bbb");
-    test("a?b*", "abbbb");
-    test("a?b*", "c");
-
-    test(".",  "a");
-    test(".", "aa");
-    test(".*", "asdsads");
-
-    test("ab((cd)|e)fg", "abcdfg");
-    test("ab((cd)|e)fg", "abefg");
-    test("ab((cd)|e)fg", "abcfg");
-
-    test("ab((cd)|e)*fg", "abcdcdcdfg");
-    test("ab((cd)|e)*fg", "abcdcdefg");
-    test("ab((cd)|e)*fg", "abcdcdcefg");
-
-    test("ab?((cd)|e)?fg*", "abfgggg");
-    
-    return 0;
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
