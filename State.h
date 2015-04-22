@@ -16,13 +16,15 @@ private:
     StateType type;
     State* accept_any_char;
     int printed;
+
+    inline void set_normal_type(){type = TYPE_NORMAL;}
+    
 public:
     State(StateType t){type = t; printed = 0; accept_any_char=NULL;}
     void add_edge(char ch, State* next);
     void print(int indent);
     int next_state(char ch, std::stack<State*> &s);
     int next_epsilong_state(std::stack<State*> &s);
-    inline void set_normal_type(){type = TYPE_NORMAL;}
     inline int is_end_state(){return type == TYPE_END;}
 };
 #endif

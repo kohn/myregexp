@@ -117,7 +117,6 @@ Automata* StarNode::gen_automata(){
     self->s_state()->add_edge(EPSILON, self->e_state());
     child_automata->e_state()->add_edge(EPSILON, child_automata->s_state());
     child_automata->e_state()->add_edge(EPSILON, self->e_state());
-    child_automata->e_state()->set_normal_type();
     return self;
 }
 
@@ -152,10 +151,6 @@ Automata* UnionNode::gen_automata(){
     le->add_edge(EPSILON, self->e_state());
     re->add_edge(EPSILON, self->e_state());
 
-    // set end state of left child and right child to normal state
-    le->set_normal_type();
-    re->set_normal_type();
-    
     return self;
 }
 
@@ -171,7 +166,6 @@ Automata* ExistNode::gen_automata(){
     Automata* child_automata = child->gen_automata();
     s->add_edge(EPSILON, child_automata->s_state());
     child_automata->e_state()->add_edge(EPSILON, e);
-    child_automata->e_state()->set_normal_type();
     return self;
 }
 

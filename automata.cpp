@@ -4,17 +4,14 @@
 #include <stack>
 
 Automata::Automata(){
-    foreign_end_state = 0;
     start_state = new State(TYPE_START);
     end_state = new State(TYPE_END);
 }
 
 Automata::~Automata(){
     delete start_state;
-    if(foreign_end_state == 0)
-        delete end_state;
+    delete end_state;
 }
-
 
 void Automata::print(){
     start_state->print(0);
@@ -51,11 +48,4 @@ int Automata::accept(std::string s){
             return 1;
     }
     return 0;
-}
-
-
-void Automata::set_end_state(State* new_end){
-    delete end_state;
-    foreign_end_state = 1;
-    end_state = new_end;
 }
