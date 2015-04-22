@@ -49,3 +49,18 @@ TEST(MixedTest, PlusTest){
     EXPECT_EQ(1, test("ab+", "ab"));
     EXPECT_EQ(0, test("ab+", "a"));
 }
+
+TEST(BracketTest, PositiveTest){
+    EXPECT_EQ(1, test("a[abc]", "ab"));
+    EXPECT_EQ(1, test("a[b|d]e", "a|e"));
+}
+
+TEST(BracketTest, NegativeTest){
+    EXPECT_EQ(0, test("a[abc]", "ad"));
+    EXPECT_EQ(0, test("[abc]", "d"));
+}
+
+TEST(BracketTest, ComplexTest){
+    EXPECT_EQ(1, test("a[bc]*", "abbbc"));
+    EXPECT_EQ(0, test("a[bc]+", "a"));
+}

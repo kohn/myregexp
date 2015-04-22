@@ -10,6 +10,7 @@ class Parser
 private:
     ParseTreeNode* parse_whole_tree(std::string s, int start, int end, int &new_pos);
     ParseTreeNode* parse_one_node(std::string s, int start, int end, int &new_pos);
+    ParseTreeNode* parse_bracket_node(std::string s, int start, int end);
     OP get_next_op(std::string s, int &pos);
     
 public:

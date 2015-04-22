@@ -79,12 +79,42 @@ ParseTreeNode* Parser::parse_one_node(std::string s, int start, int end, int &ne
         // parenthesis mismatch
         return NULL;
     }
+    case ']': {
+        int i;
+        // find the outmost '['
+        for(i=start; i<end; i++){
+            if(s[i] == '[')
+                break;
+        }
+
+        if(i == end)
+            return NULL;
+
+        new_pos = i;
+        return parse_bracket_node(s, i+1, end-1);
+    }
+    case '[': {
+        // bracket mismatch
+        return NULL;
+    }
     default:{
         // characters cases
         new_pos = pos - 1;
         return new CharNode(s[pos-1]);
     }
     }
+}
+
+ParseTreeNode* Parser::parse_bracket_node(std::string s, int start, int end){
+    if(start >= end)
+        return NULL;
+    
+    ParseTreeNode* root = new CharNode(s[end-1]);
+    for(int i=end-2; i>=start; i--){
+        ParseTreeNode* char_node = new CharNode(s[i]);
+        root = new UnionNode(char_node, root);
+    }
+    return root;
 }
 
 

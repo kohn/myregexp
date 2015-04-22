@@ -23,19 +23,9 @@ int main(int argc, char *argv[])
     cout << "===========" << endl;
 
     
-    ParseTreeNode* root = p.parse("cd");
+    ParseTreeNode* root = p.parse("a[bc]");
     root->print(0);
     Automata* root_automata = root->gen_automata();
-    root_automata->print();
-
-    root = p.parse("a?b*");
-    root->print(0);
-    root_automata = root->gen_automata();
-    root_automata->print();
-
-    root = p.parse("c(a|b)d");
-    root->print(0);
-    root_automata = root->gen_automata();
     root_automata->print();
 
     testing::InitGoogleTest(&argc, argv);
