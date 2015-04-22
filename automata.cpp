@@ -4,20 +4,17 @@
 #include <stack>
 
 Automata::Automata(){
+    foreign_end_state = 0;
     start_state = new State(TYPE_START);
     end_state = new State(TYPE_END);
 }
 
 Automata::~Automata(){
     delete start_state;
-    delete end_state;
+    if(foreign_end_state == 0)
+        delete end_state;
 }
 
-void Automata::concat(Automata* next){
-    end_state->add_edge(0, next->start_state);
-    end_state->set_normal_type();
-    end_state = next->end_state;
-}
 
 void Automata::print(){
     start_state->print(0);
@@ -33,7 +30,9 @@ int Automata::accept(std::string s){
 
     sta1->push(start_state);
     start_state->next_epsilong_state(*sta1);
-    for(int i=0; i<s.length(); i++){
+
+    int len = s.length();
+    for(int i=0; i<len; i++){
         while(!sta1->empty()){
             State* top_state = sta1->top();
             sta1->pop();
@@ -52,4 +51,11 @@ int Automata::accept(std::string s){
             return 1;
     }
     return 0;
+}
+
+
+void Automata::set_end_state(State* new_end){
+    delete end_state;
+    foreign_end_state = 1;
+    end_state = new_end;
 }

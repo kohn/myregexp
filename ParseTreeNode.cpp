@@ -51,26 +51,6 @@ ExistNode::~ExistNode(){
         delete child;
     
 }
-ConcatNode::ConcatNode(){
-}
-
-ConcatNode::~ConcatNode(){
-    
-}
-
-
-void ConcatNode::add_node(ParseTreeNode* node){
-    v.push_back(node);
-}
-void ConcatNode::print(int indent){
-    for (int i = 0; i<indent; ++i){
-        std::cout << "\t";
-    }
-    std::cout << "Concat Node" << std::endl;
-    for(int i=v.size()-1; i>=0; i--){
-        v[i]->print(indent+1);
-    }
-}
 
 void DotNode::print(int indent){
     for (int i = 0; i<indent; ++i){
@@ -116,19 +96,16 @@ void UnionNode::print(int indent){
     right->print(indent+1);
 }
 
-
-Automata* ConcatNode::gen_automata(){
-    if(self != NULL)
-        return self;
-       
-    for(int i=v.size()-1; i>=0; i--){
-        if(self == NULL)
-            self = v[i]->gen_automata();
-        else
-            self->concat(v[i]->gen_automata());
+void CatNode::print(int indent){
+    for (int i = 0; i<indent; ++i){
+        std::cout << "\t";
     }
-    return self;
+
+    std::cout << "CatNode" << std::endl;
+    left->print(indent+1);
+    right->print(indent+1);
 }
+
 
 Automata* StarNode::gen_automata(){
     if(self != NULL)
@@ -197,3 +174,22 @@ Automata* ExistNode::gen_automata(){
     child_automata->e_state()->set_normal_type();
     return self;
 }
+
+
+CatNode::~CatNode(){
+    
+}
+Automata* CatNode::gen_automata(){
+    if(self != NULL)
+        return self;
+
+    Automata* l = left->gen_automata();
+    Automata* r = right->gen_automata();
+    
+    self = new Automata();
+    self->s_state()->add_edge(EPSILON, l->s_state());
+    l->e_state()->add_edge(EPSILON, r->s_state());
+    r->e_state()->add_edge(EPSILON, self->e_state());
+    return self;
+}
+

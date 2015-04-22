@@ -8,121 +8,91 @@
 
 ParseTreeNode* Parser::parse(std::string s){
     int len = s.length();
-    std::stack<ParseTreeNode*> node_stack;
-
-    int i = 0;
-    while(i<len){
-        ParseTreeNode* new_node;
-        i = next_node(s, i, new_node);
-        node_stack.push(new_node);
-    }
-    return get_remaining_node(node_stack);
+    return parse_whole_tree(s, 0, len, len);
 }
 
-int Parser::next_node(std::string s, int start_index, ParseTreeNode* &node){
-    int len = s.length();
-    int node_flag = 0;
-    int left_brace_flag = 0;
-    std::stack<ParseTreeNode*> local_node_stack;
-
-    for(int i=start_index; i<len; i++){
-        switch (s[i]) {
-        case '.': {
-            if(node_flag != 0 && left_brace_flag == 0){
-                node = local_node_stack.top();
-                local_node_stack.pop();
-                return i;
+ParseTreeNode* Parser::parse_whole_tree(std::string s, int start, int end, int &new_pos){
+    int pos = end;
+    ParseTreeNode* last_node = NULL;
+    last_node = parse_one_node(s, start, pos, pos);
+    while(pos>start){
+        switch (get_next_op(s, pos)) {
+            case CAT: {
+                last_node = new CatNode(parse_one_node(s, start, pos, pos), last_node);
+                break;
             }
-            ParseTreeNode* new_node = new DotNode();
-            local_node_stack.push(new_node);
-            node_flag++;
-            break;
-        }
-        case '?': {
-            ParseTreeNode* new_node = new ExistNode(local_node_stack.top());
-            local_node_stack.pop();
-            local_node_stack.push(new_node);
-            node_flag++;
-            break;
-        }
-        case '*': {
-            ParseTreeNode* new_node = new StarNode(local_node_stack.top());
-            local_node_stack.pop();
-            local_node_stack.push(new_node);
-            node_flag ++;
-            break;
-        }
-        case '(': {
-            if(node_flag!=0 && left_brace_flag==0){
-                node = local_node_stack.top();
-                local_node_stack.pop();
-                assert(local_node_stack.empty());
-                return i;
+            case UNION: {
+                last_node = new UnionNode(parse_whole_tree(s, start, pos, pos), last_node);
+                break;
             }
-            left_brace_flag ++;
-            break;
-        }
-        case ')': {
-            if(left_brace_flag == 0){
-                node = local_node_stack.top();
-                local_node_stack.pop();
-                assert(local_node_stack.empty());
-                return i-1;
-            }
-            left_brace_flag --;
-            ParseTreeNode* new_node = get_remaining_node(local_node_stack);
-            local_node_stack.push(new_node);
-            node_flag++;
-            break;
-        }
-        case '|':{
-            ParseTreeNode* left= local_node_stack.top();
-            local_node_stack.pop();
-            ParseTreeNode* right;
-            i = next_node(s, i+1, right);
-            ParseTreeNode* new_node = new UnionNode(left, right);
-            local_node_stack.push(new_node);
-            node_flag++;
-            break;
-        }
-        case '+':{
-            ParseTreeNode* new_node = new StarNode(local_node_stack.top());
-            local_node_stack.push(new_node);
-            node_flag ++;
-            break;
-        }
-        default:{
-            if(node_flag !=0 && left_brace_flag == 0){
-                node = local_node_stack.top();
-                local_node_stack.pop();
-                assert(local_node_stack.empty());
-                return i;
-            }
-            ParseTreeNode* new_node = new CharNode(s[i]);
-            local_node_stack.push(new_node);
-            node_flag++;
-            break;
-        }
         }
     }
-    node = get_remaining_node(local_node_stack);
-    return len;
+    new_pos = start;
+    return last_node;
 }
+            
+ParseTreeNode* Parser::parse_one_node(std::string s, int start, int end, int &new_pos){
+    int pos = end;
 
-ParseTreeNode* Parser::get_remaining_node(std::stack<ParseTreeNode*> &sta){
-    if(sta.empty())
+    if(pos <= start)
         return NULL;
-    if(sta.size() == 1){
-        ParseTreeNode* top_node = sta.top();
-        sta.pop();
-        return top_node;
-    }
-    else{
-        ConcatNode* new_node = new ConcatNode();
-        while(!sta.empty()){
-            new_node->add_node(sta.top());
-            sta.pop();
-        }
+    
+    switch (s[pos-1]) {
+    case '*': {
+        ParseTreeNode* new_node = new StarNode(parse_one_node(s, start, pos-1, pos));
+        new_pos = pos;
         return new_node;
     }
+    case '?': {
+        ParseTreeNode* new_node = new ExistNode(parse_one_node(s, start, pos-1, pos));
+        new_pos = pos;
+        return new_node;
+    }
+    case '.': {
+        ParseTreeNode* new_node = new DotNode();
+        new_pos = pos-1;
+        return new_node;
+    }
+    case '+': { // a+ => aa*
+        ParseTreeNode* next_node = parse_one_node(s, start, pos-1, pos);
+        ParseTreeNode* star_node = new StarNode(next_node);
+        ParseTreeNode* cat_node = new CatNode(next_node, star_node);
+        new_pos = pos;
+        return cat_node;
+    }
+    case ')': {
+        // find corresponding(the outmost) '('
+        int i;
+        for(i=start; i<end; i++){
+            if(s[i] == '(')
+                break;
+        }
+
+        // parenthesis mismatch
+        if(i == end)
+            return NULL;
+        
+        new_pos = i;
+        return parse_whole_tree(s, i+1, end-1, pos);
+    }
+    case '(': {
+        // parenthesis mismatch
+        return NULL;
+    }
+    default:{
+        // characters cases
+        new_pos = pos - 1;
+        return new CharNode(s[pos-1]);
+    }
+    }
+}
+
+
+OP Parser::get_next_op(std::string s, int &pos){
+    if(s[pos-1] == '|'){
+        pos = pos-1;
+        return UNION;
+    }
+    else
+        return CAT;
 }

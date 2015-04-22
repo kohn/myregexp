@@ -79,16 +79,16 @@ public:
     ~ExistNode();
 };
 
-// concat
-class ConcatNode:public ParseTreeNode
+class CatNode:public ParseTreeNode
 {
 private:
-    std::vector<ParseTreeNode*> v;
+    ParseTreeNode* left;
+    ParseTreeNode* right;
 public:
-    ConcatNode();
+    CatNode(ParseTreeNode *l, ParseTreeNode *r){left = l; right=r;}
     Automata* gen_automata();
-    void add_node(ParseTreeNode* node);
     void print(int indent);
-    ~ConcatNode();
+    virtual ~CatNode();
 };
+
 #endif

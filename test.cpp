@@ -16,6 +16,8 @@ TEST(MixedTest, ConcatTest){
 
 TEST(MixedTest, UnionTest){
     EXPECT_EQ(1, test("a(b|c)", "ab"));
+    EXPECT_EQ(1, test("abcd|efg", "abcd"));
+    EXPECT_EQ(0, test("cd|e", "c"));
 }
 
 TEST(MixedTest, StarTest){
@@ -34,8 +36,8 @@ TEST(MixedTest, DotTest){
 }
 
 TEST(MixedTest, MixTest){
-    EXPECT_EQ(1, test("ab((cd)|e)fg", "abcdfg"));
-    EXPECT_EQ(1, test("ab((cd)|e)fg", "abefg"));
+    EXPECT_EQ(1, test("ab(cd|e)fg", "abcdfg"));
+    EXPECT_EQ(1, test("ab(cd|e)fg", "abefg"));
     EXPECT_EQ(0, test("ab((cd)|e)fg", "abcfg"));
     EXPECT_EQ(1, test("ab((cd)|e)*fg", "abcdcdcdfg"));
     EXPECT_EQ(1, test("ab((cd)|e)*fg", "abcdcdefg"));

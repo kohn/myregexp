@@ -4,6 +4,9 @@
 #include <vector>
 #include <stack>
 void State::add_edge(char ch, State* next){
+    if(is_end_state())
+        set_normal_type(); 
+    
     if(ch == EPSILON)
         epsilon_jump_vec.push_back(next);
     else if(ch == ANY)
@@ -17,7 +20,10 @@ void State::print(int indent){
     for (int i = 0; i<indent; ++i){
         std::cout << " ";
     }
-    std::cout << (void*)this << std::endl;
+    if(is_end_state())
+        std::cout << (void*)this << " endstate" << std::endl;
+    else
+        std::cout << (void*)this << std::endl;
     if(printed == 1)
         return;
     printed = 1;
