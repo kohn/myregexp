@@ -18,6 +18,7 @@ TEST(MixedTest, UnionTest){
     EXPECT_EQ(1, test("a(b|c)", "ab"));
     EXPECT_EQ(1, test("abcd|efg", "abcd"));
     EXPECT_EQ(0, test("cd|e", "c"));
+    EXPECT_EQ(1, test("abcd|efgh|hijk", "efgh"));
 }
 
 TEST(MixedTest, StarTest){
